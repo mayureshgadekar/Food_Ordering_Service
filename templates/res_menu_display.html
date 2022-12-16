@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<link rel="stylesheet" href="{% static 'myfirst.css' %}">
+<body>
+    
+<form method="POST">
+{%csrf_token %}
+    <div class="login">
+        <div class="login-header" >{{ request.session.r_emailid }}</div>
+    </div>
+</form>
+
+{% comment %} <div>
+<H1>Items in current menu</H1>
+{% for key, value in results.items %}
+        <div class="dropdown">
+            <form action="{% url 'delete_res_menu_item' %}" method="POST">
+                {%csrf_token %}
+                <select name="name_of_item" >
+                    <option disabled="true" class="dropbtn" class="row" selected>Items in menu/></option>
+                    {% for i in value%}
+                    <option  class="dropdown-content" class="column" value="{{i.0}},{{i.1}}" >{{i.0}},{{i.1}}</option>
+                    {% endfor %}
+                </select>
+                <input type="hidden" name="r_emailid" value="{{key}}"></input>
+                {% comment %} <button type="submit" onclick="location.href='{% url 'user_page' %}'">Add to cart</button>  {% endcomment %}
+                {% comment %} <button type="submit">Delete from Menu</button>
+            </form> 
+        </div>
+    <br></br> {% endcomment %}
+{% comment %} {% endfor %} 
+</div>{% endcomment %} 
+
+{% for key, value in results.items %}
+    <div>
+        <form action="{% url 'delete_res_menu_item' %}" method="POST">
+            {%csrf_token %}
+            <select  name="name_of_item" >
+                <option disabled="true" selected>Select items from menu to delete/></option>
+                {% for i in value%}
+                <option  value="{{i.0}},{{i.1}}" >{{i.0}},{{i.1}}</option>
+                {% endfor %}
+            </select>
+            <input type="hidden" name="r_emailid" value="{{key}}"></input>
+            <button type="submit">Delete from menu</button>
+        </form> 
+    </div>
+<br></br>
+{% endfor %} 
+ 
+</body>
+</html>                  

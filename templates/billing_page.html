@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<link rel="stylesheet" href="{% static 'myfirst.css' %}">
+<body>
+
+<form method="POST">
+{%csrf_token %}
+{% comment %} {% if messages %}
+    {% for message in messages %}
+    <div class={{ message.tags }}>{{ message }}</div>
+    {% endfor %}
+{% endif %} {% endcomment %}
+<p> Hello:</p>
+<p>{{ request.session.emailid }}</p>
+</form>
+
+
+{% comment %} {% for value1,value2,value3,value4 in results %}
+    <div>  
+        <B>{{ value4 }}</B>
+            <a> {{value2}}{{value3}} </a>
+    </div>
+    <br></br>
+{% endfor %}  {% endcomment %}
+
+{% comment %} {% for value1,value2,value3,value4 in results %}
+<div>
+    <form action="{% url 'delete_cart' %}" method="POST">
+        {%csrf_token %}
+        <label name="r_name">{{value4}}</label>
+        <select  name="name_of_item" >
+            <option disabled="true" selected>Select items from menu/></option>
+            <option  value="{{value2}},{{value3}}">{{value2}},{{value3}}</option>
+        </select>
+        <input type="hidden" name="r_name" value="{{value4}}"></input>
+        <button type="submit">Delete from cart</button>
+    </form>
+</div>
+<br></br>
+{% endfor %} {% endcomment %}
+
+{% for key, value in results.items %}
+<label name="r_name">{{ key }}</label>
+    <div>
+        <form action="{% url 'delete_cart' %}" method="POST">
+            {%csrf_token %}
+            <select  name="name_of_item" >
+                <option disabled="true" selected>Select items from menu to delete/></option>
+                {% for i in value%}
+                <option  value="{{i.1}},{{i.2}}" >{{i.1}},{{i.2}}</option>
+                {% endfor %}
+            </select>
+            <input type="hidden" name="r_name" value="{{key}}"></input>
+            <button type="submit">Delete from cart</button>
+        </form> 
+    </div>
+<br></br>
+{% endfor %} 
+
+<p> Total Amount:</p>
+<p>{{ request.session.ov_total }}</p>
+
+{% comment %} {% for key, value in results.items %}
+<label name="r_name">{{ key }}</label>
+    <div>
+        <form action="{% url 'delete_cart' %}" method="POST">
+            {%csrf_token %}
+            <select  name="name_of_item" >
+                <option disabled="true" selected>Select items from menu/></option>
+                {% for i in value%}
+                <option  value="{{i.1}},{{i.2}}" >{{i.1}},{{i.2}}</option>
+                {% endfor %}
+            </select>
+            <input type="hidden" name="r_name" value="{{key}}"></input>
+            {% comment %} <button type="submit" onclick="location.href='{% url 'user_page' %}'">Add to cart</button> {% endcomment %}
+            {% comment %} <button type="submit">Add to cart</button>
+        </form> 
+    </div>
+<br></br>
+{% endfor %}   {% endcomment %} 
+
+
+
+<br>
+<button class="login-button" onclick="location.href='{% url 'payment' %}'" type="submit" />Pay</button>
+<br>
+</body>
+</html>   

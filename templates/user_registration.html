@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html>
+{% load static %}
+<link rel="stylesheet" href="{% static 'myfirst.css' %}">
+<body>
+<div class="login">
+        <div class="login-header">
+            <h1>User registration</h1>
+        </div> 
+    <form method="POST" >
+        {% csrf_token %}
+        <div class="login-form">
+            <h3>Email id</h3>
+            <input type="text" placeholder="email id" name="emailid"/><br>
+            <h3>Password</h3>
+            <input type="password" placeholder="Password" name="password"/>
+            <h3>Name</h3>
+            <input type="text" placeholder="name" name="name"/>
+            <h3>Phone number:</h3>
+            <input type="text" placeholder="Phone number" name="phone_number"/>
+            <h3>Address:</h3>
+            <input type="text" placeholder="Address" name="address"/>
+            <h3>City:</h3>
+            <input type="text" placeholder="City" name="city"/>
+            <h3>Country:</h3>
+            <input type="text" placeholder="Country" name="country"/>
+            <br>
+            <button class="login-button"  type="submit" '"/>SignUp</button>
+        </div>
+    </form>
+</div>
+   
+</body>
+</html>

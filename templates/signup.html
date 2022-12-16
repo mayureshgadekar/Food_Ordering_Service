@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="{% static 'myfirst.css' %}">
+<script src="{% static 'myfirst.js' %}"></script>
+<body>
+    <div class="login">
+        <div class="login-header">
+          <h1>Registration</h1>
+        </div>
+        <div class="login-form">
+            <br>
+            <div class="dropdown">
+                <button class="dropbtn"><B>Who are you? Are you a user or a restaurant?</B></button>
+                <div class="dropdown-content">
+                    <a onclick="location.href='{% url 'user_reg' %}'" >User</a>
+                    <a onclick="location.href='{% url 'restaurant_reg' %}'">Restaurants</a>
+                </div>
+            </div>
+            </br>
+          </div>
+        </div>
+    </div>    
+</body>
+</html>

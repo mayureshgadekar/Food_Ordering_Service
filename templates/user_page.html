@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<link rel="stylesheet" href="{% static 'myfirst.css' %}">
+<body>
+    
+<form method="POST">
+        {%csrf_token %}
+        {% comment %} {% if messages %}
+            {% for message in messages %}
+            <div class="login">
+                <div class="login-header" class={{ message.tags }}>Hello {{ message }}</div>
+            </div>
+            {% endfor %}
+        {% endif %} {% endcomment %}
+        <p> Hello:</p>
+        <p>{{ request.session.emailid }}</p>
+</form>
+
+<br></br>
+
+    <div class="login">
+        <div class="login-form">
+            <form action="{% url 'search' %}" method="POST">
+                {%csrf_token %}
+                <input type="text" name="search_string" placeholder="Tomazo Search">
+                </input>
+            </form>
+        </div>
+    </div>
+
+<br></br>
+
+{% for key, value in results.items %}
+    <label  class="login-form" name="r_name">{{ key }}</label>
+        <div class="dropdown">
+            <form action="{% url 'add_cart' %}" method="POST">
+                {%csrf_token %}
+                <select name="name_of_item" >
+                    <option disabled="true" class="dropbtn" class="row" selected>Select items from menu/></option>
+                    {% for i in value%}
+                    <option  class="dropdown-content" class="column" value="{{i.1}},{{i.2}}" >{{i.1}},{{i.2}}</option>
+                    {% endfor %}
+                </select>
+                <input type="hidden" name="r_name" value="{{key}}"></input>
+                {% comment %} <button type="submit" onclick="location.href='{% url 'user_page' %}'">Add to cart</button>  {% endcomment %}
+                <button type="submit" onclick="location.href='{% url 'user_page' %}'">Add to cart</button>
+            </form> 
+        </div>
+    <br></br>
+{% endfor %} 
+
+                {% comment %} {% for value1,value2,value3,value4,value5,value6,value7,value8,value9,value10 in results %}
+                <label>{{ value6 }}</label>
+                <div>
+                    <form action="{% url 'add_cart' %}" method="POST">
+                        {%csrf_token %}
+                        <select  name="name_of_item" >
+                            <option disabled="true" selected>Select items from menu/></option>
+                            <option  value="{{value2}},{{value3}}">{{value2}},{{value3}}</option>
+                        </select>
+                        <input type="hidden" name="r_name" value="{{value6}}"></input>
+                        <button type="submit" onclick="location.href='{% url 'user_page' %}'">Add to cart</button>
+                    </form>
+                </div>
+                <br></br>
+                {% endfor %}     {% endcomment %}
+        
+
+            
+<br>
+<a onclick="location.href='{% url 'billing' %}'" >Submit</a>
+<br>
+
+<br>
+<button class="login-button" type="submit"/>SignOut</button>
+<br>
+</div>  
+ 
+</body>
+</html>                  
