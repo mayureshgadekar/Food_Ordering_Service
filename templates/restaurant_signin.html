@@ -7,6 +7,7 @@
         <div class="login-header">
             <h1>Restaurant</h1>
         </div> 
+
     <form action="{% url 'res_menu_display' %}" method="POST">
         {%csrf_token %}
     <div class="login-form">
@@ -17,7 +18,9 @@
             <button class="login-button" type="submit"  />Login</button>
             <a onclick="location.href='{% url 'restaurant_reg' %}'">&nbsp;SignUp</a>
     </div>
+    </form>  
+    
 </div>
-</form>    
+  
 </body>
 </html>                  

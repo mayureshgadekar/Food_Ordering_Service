@@ -7,7 +7,7 @@
 <form method="POST">
 {%csrf_token %}
     <div class="login">
-        <div class="login-header" >{{ request.session.r_emailid }}</div>
+        <div class="login-header" >Hello {{ request.session.r_emailid }}</div>
     </div>
 </form>
 
@@ -33,21 +33,48 @@
 </div>{% endcomment %} 
 
 {% for key, value in results.items %}
-    <div>
-        <form action="{% url 'delete_res_menu_item' %}" method="POST">
-            {%csrf_token %}
-            <select  name="name_of_item" >
-                <option disabled="true" selected>Select items from menu to delete/></option>
-                {% for i in value%}
-                <option  value="{{i.0}},{{i.1}}" >{{i.0}},{{i.1}}</option>
-                {% endfor %}
-            </select>
-            <input type="hidden" name="r_emailid" value="{{key}}"></input>
-            <button type="submit">Delete from menu</button>
-        </form> 
+<div>
+    <div class="login-header">
+        Current menu items
     </div>
+    <br></br>
 <br></br>
+    <div>
+        <div>
+            <div>
+                <form action="{% url 'delete_res_menu_item' %}" method="POST">
+                    <label name="r_emailid" value="{{key}}"></label>
+                    {%csrf_token %}
+                    <select  name="name_of_item" class="summary-1" style="font-size: 25px">
+                        <option disabled="true" selected>Select items from menu to delete/></option>
+                        {% for i in value%}
+                        <option  value="{{i.0}},{{i.1}}" >{{i.0}},{{i.1}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" name="r_emailid" value="{{key}}"></input>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <br></br>
+                    <div >
+                        <button type="submit" style="float: right;">Delete from menu</button>
+                    </div>
+                </form> 
+            </div>
+        </div>
+    </div>
+</div>
 {% endfor %} 
+
+<div>
+    <button class="login-button" onclick="location.href='{% url 'restaurant_menu' %}'" />Add menu</button>
+</div>
  
 </body>
 </html>                  

@@ -11,8 +11,7 @@
     <div class={{ message.tags }}>{{ message }}</div>
     {% endfor %}
 {% endif %} {% endcomment %}
-<p> Hello:</p>
-<p>{{ request.session.emailid }}</p>
+<p class="login-header"> Hello:{{ request.session.emailid }}</p>
 </form>
 
 
@@ -40,23 +39,55 @@
 <br></br>
 {% endfor %} {% endcomment %}
 
+{% comment %} {% for key, value in results.items %}
+    <label name="r_name">{{ key }}</label>
+        <div>
+            <form action="{% url 'delete_cart' %}" method="POST">
+                {%csrf_token %}
+                <select  name="name_of_item" >
+                    <option disabled="true" selected>Select items from menu to delete/></option>
+                    {% for i in value%}
+                    <option  value="{{i.1}},{{i.2}}" >{{i.1}},{{i.2}}</option>
+                    {% endfor %}
+                </select>
+                <input type="hidden" name="r_name" value="{{key}}"></input>
+                <button type="submit" onclick="location.href='{% url 'billing' %}'">Delete from cart</button>
+            </form> 
+        </div>
+    <br></br>
+    {% endfor %} 
+</div> {% endcomment %}
+
 {% for key, value in results.items %}
-<label name="r_name">{{ key }}</label>
-    <div>
-        <form action="{% url 'delete_cart' %}" method="POST">
+    <div class="card">
+        <div class="container">
+            <div class="res_names">
+            {{ key }}
+            </div>
+            <form action="{% url 'delete_cart' %}" method="POST">
             {%csrf_token %}
-            <select  name="name_of_item" >
-                <option disabled="true" selected>Select items from menu to delete/></option>
-                {% for i in value%}
-                <option  value="{{i.1}},{{i.2}}" >{{i.1}},{{i.2}}</option>
-                {% endfor %}
-            </select>
-            <input type="hidden" name="r_name" value="{{key}}"></input>
-            <button type="submit">Delete from cart</button>
-        </form> 
+            <br></br>
+            <br></br>
+            <div class="drop-down">
+                <select name="name_of_item" class="summary">
+                    <option disabled="true"  selected>Select items from menu to delete</option>
+                    {% for i in value%}
+                    <option   value="{{i.1}},{{i.2}}" >{{i.1}},{{i.2}}</option>
+                    {% endfor %}
+                </select>
+                <input type="hidden" name="r_name" value="{{key}}"></input>
+                {% comment %} <button type="submit" onclick="location.href='{% url 'user_page' %}'">Add to cart</button>  {% endcomment %}
+            </div>
+            <div class="submit_button">
+                <button type="submit" onclick="location.href='{% url 'billing' %}'">Delete from cart</button>
+            </div>
+            </form> 
+        </div>
     </div>
-<br></br>
-{% endfor %} 
+    <br></br>
+{% endfor %}
+
+
 
 <p> Total Amount:</p>
 <p>{{ request.session.ov_total }}</p>
