@@ -333,7 +333,7 @@ def restaurant_reg(request):
                         p+=1
             if (l>=1 and u>=1 and p>=1 and d>=1 and l+p+u+d==len(s)):
                 print("Valid Password")
-                insertstvalues.r_password = hashlib.sha256(insertstvalues.password.encode('utf-8')).hexdigest().upper()       
+                insertstvalues.r_password = hashlib.sha256(insertstvalues.r_password.encode('utf-8')).hexdigest().upper()       
                 insertstvalues.r_name=request.POST.get('r_name')
                 insertstvalues.r_phone_number=request.POST.get('r_phone_number')
                 insertstvalues.r_address=request.POST.get('r_address')

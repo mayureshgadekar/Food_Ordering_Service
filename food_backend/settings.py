@@ -25,7 +25,7 @@ SECRET_KEY = 'v4ob0cl)82wn+p3=z7s-ivuog#20)7hy!ylhnf$1ddv4e7&=!@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 ADMIN_ENABLED = False
 # Application definition
@@ -126,6 +126,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
