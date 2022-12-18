@@ -15,6 +15,7 @@
             <input type="text" placeholder="email id" name="r_emailid"/><br>
             <h3>RestaurantPassword</h3>
             <input type="password" placeholder="Password" name="r_password"/>
+            {{request.session.invalid_password}}
             <h3>Restaurant Name</h3>
             <input type="text" placeholder="name" name="r_name"/>
             <h3>Restaurant Phone number:</h3>

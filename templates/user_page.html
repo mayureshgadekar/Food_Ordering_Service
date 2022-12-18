@@ -27,7 +27,6 @@
                 </input>
             </form>
         </div>
-        {{ request.session.search_string }}
     </div> 
 <br></br>
 
@@ -46,7 +45,7 @@
             <br></br>
             <br></br>
             <div class="drop-down">
-                <select name="name_of_item" class="summary">
+                <select name="name_of_item" class="search-select">
                     <option disabled="true"  selected>Select items from menu</option>
                     {% for i in value%}
                     <option   value="{{i.1}},{{i.2}}" >{{i.1}},{{i.2}}</option>
@@ -68,7 +67,7 @@
 <div>
 <button class="login-button" onclick="location.href='{% url 'billing' %}'" />Submit</button>
 
-<button class="login-button" type="submit" style="float: right;" />SignOut</button>
+<button class="login-button" onclick="location.href='{% url 'signout' %}'" type="submit" style="float: right;" />SignOut</button>
 </div> 
 
 </body>

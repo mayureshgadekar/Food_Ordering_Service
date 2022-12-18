@@ -369,6 +369,8 @@ button {
 right: 40px;
 }
 
+
+
 .summary {
 
   padding:10px;
@@ -379,6 +381,18 @@ right: 40px;
 	background-color: rgb(255, 255, 255);
 	list-style: none;
   font-size: 50px;
+}
+
+.search-select {
+  padding:10px;
+  width: 200px;
+  text-decoration: bold;
+  vertical-align:middle;
+	cursor: pointer;
+	border-radius: 5px;
+	background-color: rgb(255, 255, 255);
+	list-style: none;
+  font-size: 10px;
 }
 
 .summary-1 {

@@ -14,9 +14,12 @@
         {% for message in messages %}
         <div class={{ message.tags }}>{{ message }}</div>
         {% endfor %} {% endcomment %}
-        <p> Hello:</p>
+        <div class="login">
+            <div class="login-header" >Hello {{ request.session.r_emailid }}</div>
+        </div>
+        {% comment %} <p> Hello:</p>
         <p>{{ request.session.r_emailid }}</p>
-   
+    {% endcomment %}
 
         <div class="login-form">
             {% comment %} <h3>Restaurant Emailid:</h3>

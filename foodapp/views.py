@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.template import loader, RequestContext 
 from django.contrib import messages
 from collections import defaultdict
+import hashlib
 from django.contrib.auth.decorators import login_required
 import pyodbc
 
@@ -17,6 +18,8 @@ def user_signin(request):
             insertstvalues=signin_userdata()
             insertstvalues.emailid = request.POST.get('emailid')
             insertstvalues.pass1 = request.POST.get('password')
+            insertstvalues.pass1 = hashlib.sha256(insertstvalues.pass1.encode('utf-8')).hexdigest().upper()
+            print(insertstvalues.pass1)
             request.session['emailid'] = insertstvalues.emailid
             cursor=conn.cursor()
             cursor.execute("delete from Cart where emailid='"+insertstvalues.emailid+"'")
@@ -142,6 +145,7 @@ def res_signin(request):
             insertstvalues=signin_userdata()
             insertstvalues.r_emailid = request.POST.get('r_emailid')
             insertstvalues.r_pass1 = request.POST.get('password')
+            insertstvalues.r_pass1 = hashlib.sha256(insertstvalues.r_pass1.encode('utf-8')).hexdigest().upper()
             request.session['r_emailid'] = insertstvalues.r_emailid
             cursor=conn.cursor()
             #cursor.execute("delete from Cart where emailid='"+insertstvalues.emailid+"'")
@@ -222,19 +226,50 @@ def user_reg(request):
             insertstvalues=insert_userdata()
             insertstvalues.emailid=request.POST.get('emailid')
             insertstvalues.password=request.POST.get('password')
-            insertstvalues.name=request.POST.get('name')
-            insertstvalues.phone_number=request.POST.get('phone_number')
-            insertstvalues.address=request.POST.get('address')
-            insertstvalues.city=request.POST.get('city')
-            insertstvalues.country=request.POST.get('country')
-            ph_num=str(insertstvalues.phone_number)
-            cursor=conn.cursor()
-            #cursor.execute("insert into user_data values('"+insertstvalues.emailid+"','"+insertstvalues.password+"','"+ insertstvalues.name+"','"+ph_num+"', '"+insertstvalues.address+"', '"+insertstvalues.city+"', '"+insertstvalues.country+"' )")
-            cursor.execute("insert into user_data values(?,?,?,?,?,?,?)",(insertstvalues.emailid,insertstvalues.password,insertstvalues.name,ph_num,insertstvalues.address,insertstvalues.city,insertstvalues.country) )
+            s = insertstvalues.password
+            capitalalphabets="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            smallalphabets="abcdefghijklmnopqrstuvwxyz"
+            specialchar="$@_"
+            digits="0123456789"
+            l=0
+            u=0
+            p=0
+            d=0
+            if (len(s) >= 8):
+                for i in s:
             
-            cursor.commit()
-            return redirect('user_signin')
-            #return render(request, 'login_page.html',{'form':'form'})
+                    # counting lowercase alphabets
+                    if (i in smallalphabets):
+                        l+=1           
+            
+                    # counting uppercase alphabets
+                    if (i in capitalalphabets):
+                        u+=1           
+            
+                    # counting digits
+                    if (i in digits):
+                        d+=1           
+            
+                    # counting the mentioned special characters
+                    if(i in specialchar):
+                        p+=1       
+            if (l>=1 and u>=1 and p>=1 and d>=1 and l+p+u+d==len(s)):
+                print("Valid Password")
+                insertstvalues.password = hashlib.sha256(insertstvalues.password.encode('utf-8')).hexdigest().upper()
+                insertstvalues.name=request.POST.get('name')
+                insertstvalues.phone_number=request.POST.get('phone_number')
+                insertstvalues.address=request.POST.get('address')
+                insertstvalues.city=request.POST.get('city')
+                insertstvalues.country=request.POST.get('country')
+                ph_num=str(insertstvalues.phone_number)
+                cursor=conn.cursor()
+                #cursor.execute("insert into user_data values('"+insertstvalues.emailid+"','"+insertstvalues.password+"','"+ insertstvalues.name+"','"+ph_num+"', '"+insertstvalues.address+"', '"+insertstvalues.city+"', '"+insertstvalues.country+"' )")
+                cursor.execute("insert into user_data values(?,?,?,?,?,?,?)",(insertstvalues.emailid,insertstvalues.password,insertstvalues.name,ph_num,insertstvalues.address,insertstvalues.city,insertstvalues.country) )
+                cursor.commit()
+                return redirect('user_signin')
+            else:
+                print("Invalid Password")
+                request.session['invalid_password'] = "Invalid password"
         else:
             return render(request, 'user_registration.html',{'form':'form'})
     return render(request, 'user_registration.html',{'form':'form'})
@@ -246,18 +281,49 @@ def restaurant_reg(request):
             insertstvalues=insert_resdata()
             insertstvalues.r_emailid=request.POST.get('r_emailid')
             insertstvalues.r_password=request.POST.get('r_password')
-            insertstvalues.r_name=request.POST.get('r_name')
-            insertstvalues.r_phone_number=request.POST.get('r_phone_number')
-            insertstvalues.r_address=request.POST.get('r_address')
-            insertstvalues.r_city=request.POST.get('r_city')
-            insertstvalues.r_country=request.POST.get('r_country')
-            ph_num=str(insertstvalues.r_phone_number)
-            cursor=conn.cursor()
-            #cursor.execute("insert into res_data values('"+insertstvalues.r_emailid+"','"+insertstvalues.r_password+"','"+ insertstvalues.r_name+"','"+ph_num+"', '"+insertstvalues.r_address+"', '"+insertstvalues.r_city+"', '"+insertstvalues.r_country+"' )")
-            cursor.execute("insert into res_data values('"+insertstvalues.r_emailid+"','"+insertstvalues.r_password+"','"+ insertstvalues.r_name+"','"+ph_num+"', '"+insertstvalues.r_address+"', '"+insertstvalues.r_city+"', '"+insertstvalues.r_country+"' )")
-            cursor.commit()
-            return redirect('res_signin')
-            #return render(request, 'login_page.html',{'form':'form'})
+            s = insertstvalues.r_password
+            capitalalphabets="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            smallalphabets="abcdefghijklmnopqrstuvwxyz"
+            specialchar="$@_"
+            digits="0123456789"
+            l=0
+            u=0
+            p=0
+            d=0
+            if (len(s) >= 8):
+                for i in s:
+            
+                    # counting lowercase alphabets
+                    if (i in smallalphabets):
+                        l+=1           
+            
+                    # counting uppercase alphabets
+                    if (i in capitalalphabets):
+                        u+=1           
+            
+                    # counting digits
+                    if (i in digits):
+                        d+=1           
+            
+                    # counting the mentioned special characters
+                    if(i in specialchar):
+                        p+=1
+            if (l>=1 and u>=1 and p>=1 and d>=1 and l+p+u+d==len(s)):
+                print("Valid Password")
+                insertstvalues.r_password = hashlib.sha256(insertstvalues.password.encode('utf-8')).hexdigest().upper()       
+                insertstvalues.r_name=request.POST.get('r_name')
+                insertstvalues.r_phone_number=request.POST.get('r_phone_number')
+                insertstvalues.r_address=request.POST.get('r_address')
+                insertstvalues.r_city=request.POST.get('r_city')
+                insertstvalues.r_country=request.POST.get('r_country')
+                ph_num=str(insertstvalues.r_phone_number)
+                cursor=conn.cursor()
+                cursor.execute("insert into res_data values(?,?,?,?,?,?,?)",(insertstvalues.r_emailid,insertstvalues.r_password, insertstvalues.r_name, ph_num, insertstvalues.r_address, insertstvalues.r_city,insertstvalues.r_country))
+                cursor.commit()            
+                return redirect('res_signin')
+            else:
+                print("Invalid Password")
+                request.session['invalid_password'] = "Invalid password"
         else:
             return render(request, 'restaurant_registration.html',{'form':'form'})
     return render(request, 'restaurant_registration.html',{'form':'form'})
