@@ -112,9 +112,21 @@
 {% endfor %}   {% endcomment %} 
 
 
+<script>
+    function payButton()
+    {
+        window.location  = '{% url 'payment' %}'";
+    }
+</script>
 
 <br>
-<button class="login-button" onclick="location.href='{% url 'payment' %}'" type="submit" />Pay</button>
+<button class="login-button" onclick="location.href='{% url 'payment' %}'" />Pay</button>
 <br>
+
+<br>
+<button class="login-button" onclick="location.href='{% url 'user_page' %}'" />Add items to cart</button>
+<br>
+
+
 </body>
 </html>   

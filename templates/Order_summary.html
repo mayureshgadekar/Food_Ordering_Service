@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<link rel="stylesheet" href="{% static 'myfirst.css' %}">
+<body>
+
+<form method="POST">
+{%csrf_token %}
+{% comment %} {% if messages %}
+    {% for message in messages %}
+    <div class={{ message.tags }}>{{ message }}</div>
+    {% endfor %}
+{% endif %} {% endcomment %}
+<p class="login-header"> Hello:{{ request.session.r_emailid }}</p>
+</form>
+
+{% for key, value in results.items %}
+    <div class="card">
+        <div class="container">
+            <div class="res_names">
+            {{ key }}
+            </div>
+            <form action="{% url 'out_for_delivery' %}" method="POST">
+            {%csrf_token %}
+            <br></br>
+            <br></br>
+            <div class="drop-down">
+                <select name="name_of_item" class="search-select">
+                    <option disabled="true"  selected>Select items from menu to delete</option>
+                    {% for i in value%}
+                    <option   value="{{i.0}},{{i.1}}" >{{i.0}},{{i.1}}</option>
+                    {% endfor %}
+                </select>
+
+                {% comment %} <button type="submit" onclick="location.href='{% url 'user_page' %}'">Add to cart</button>  {% endcomment %}
+            </div>
+            <div class="submit_button">
+                <button type="submit" onclick="location.href='{% url 'order_sum_to_res' %}'">Done</button>
+            </div>
+
+            </form> 
+        </div>
+    </div>
+    <br></br>
+{% endfor %}
+
+<br>
+<button class="login-button" onclick="location.href='{% url 'res_menu_display' %}'" />Go back to see menu</button>
+<br>
+
+<br>
+<button class="login-button" onclick="location.href='{% url 'signout' %}'" />Signout</button>
+<br>
+
+
+</body>
+</html>   

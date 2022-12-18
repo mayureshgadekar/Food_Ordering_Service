@@ -3,15 +3,18 @@ from foodapp.models import insert_userdata, insert_resdata, signin_userdata, ins
 from django.http import HttpResponse
 from django.template import loader, RequestContext 
 from django.contrib import messages
+from django.contrib import sessions
 from collections import defaultdict
 import hashlib
 from django.contrib.auth.decorators import login_required
 import pyodbc
 
 def index(request):
+    request.session.flush()
     return render(request,'login_page.html',{'form':'form'})
 
 def user_signin(request):
+    request.session.flush()
     conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=LAPTOP-N1M6BCLV\MSSQLSERVER2019;DATABASE=tomazodb;UID=sa;PWD=toor')
     if request.method=="POST":
         if request.POST.get('emailid') and request.POST.get('password'):
@@ -161,54 +164,74 @@ def res_signin(request):
                 redirect('res_signin')
     return render(request,'restaurant_signin.html',{'form':'form'})
 
-
-def res_menu_display(request):
-    r_emailid= res_menu_page_display()
-    r_email=""
-    r_emailid = request.POST.get('r_emailid')
-    request.session['r_emailid'] = r_emailid
-    if not request.POST.get('name_of_item') == None:
-        r_email= r_emailid
-    request.session['r_emailid'] = r_emailid
-    #messages.success(request,emailid)
-    conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=LAPTOP-N1M6BCLV\MSSQLSERVER2019;DATABASE=tomazodb;UID=sa;PWD=toor')
-    cursor=conn.cursor()
-    #cursor.execute("SELECT * FROM menu l INNER JOIN res_data r ON l.r_emailid = r.r_emailid") 
-    #cursor.execute("select * from menu where r_emailid= '"+ r_emailid +"' ")
-    cursor.execute("select * from menu where r_emailid=?",(r_emailid))
-    results = cursor.fetchall()
-    list1 = results
-    list2 = results
-    #my_dict = {t[9]: t[:9] for t in results}
-    dict1 = {key: [(value1, value2 )] for key, value1, value2 in list1}
-    for key, value1, value2 in list2:
-        dict1[key].append((value1, value2))
-    for k in dict1:
-        del dict1[k][0]
-    print (dict1)
-    redirect('res_menu_display')
-    return render(request,'res_menu_display.html',{'results': dict1})
-
-
 def delete_res_menu_item(request):
     conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=LAPTOP-N1M6BCLV\MSSQLSERVER2019;DATABASE=tomazodb;UID=sa;PWD=toor')
-    r_emailid=request.session['r_emailid']
-    request.session['r_emailid'] = r_emailid
+    r_emailid=request.POST.get('r_emailid')
     res=""
     results = request.POST.get('name_of_item')
     if not request.POST.get('name_of_item') == None:
         res= results.split(",")
-    #print(res)  
-    r_emailid=request.POST.get('r_emailid')
-    #print(r_emailid)
+    print(res)  
+    print(r_emailid)
     cursor=conn.cursor()
     #cursor.execute("Delete from menu WHERE r_emailid='"+r_emailid+"' and Item='"+res[0]+"'")
     cursor.execute("Delete from menu WHERE r_emailid=? and Item=?",(r_emailid,res[0]))
     cursor.commit()
+    request.session['r_emailid'] = r_emailid
     return redirect('res_menu_display')
+    #return render(request,'res_menu_display.html')
+
+def res_menu_display(request):
+    # r_emailid= res_menu_page_display()
+    if request.POST.get('r_emailid'):
+        r_emailid = request.POST.get('r_emailid')
+        request.session['r_emailid'] = r_emailid
+        conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=LAPTOP-N1M6BCLV\MSSQLSERVER2019;DATABASE=tomazodb;UID=sa;PWD=toor')
+        cursor=conn.cursor()
+        cursor.execute("select * from menu where r_emailid=?",(r_emailid))
+        results = cursor.fetchall()
+        list1 = results
+        list2 = results
+        dict1 = {key: [(value1, value2 )] for key, value1, value2 in list1}
+        for key, value1, value2 in list2:
+            dict1[key].append((value1, value2))
+        for k in dict1:
+            del dict1[k][0]
+        print (dict1)
+        return render(request,'res_menu_display.html',{'results': dict1})
+    else:
+        r_emailid = request.session['r_emailid']
+        #r_email = r_emailid
+        request.session['r_emailid'] = r_emailid
+        #if not request.POST.get('name_of_item') == None:
+        #    r_email= r_emailid
+        #request.session['r_emailid'] = r_emailid
+        #messages.success(request,emailid)
+        conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=LAPTOP-N1M6BCLV\MSSQLSERVER2019;DATABASE=tomazodb;UID=sa;PWD=toor')
+        cursor=conn.cursor()
+        #cursor.execute("SELECT * FROM menu l INNER JOIN res_data r ON l.r_emailid = r.r_emailid") 
+        #cursor.execute("select * from menu where r_emailid= '"+ r_emailid +"' ")
+        cursor.execute("select * from menu where r_emailid=?",(r_emailid))
+        results = cursor.fetchall()
+        list1 = results
+        list2 = results
+        #my_dict = {t[9]: t[:9] for t in results}
+        dict1 = {key: [(value1, value2 )] for key, value1, value2 in list1}
+        for key, value1, value2 in list2:
+            dict1[key].append((value1, value2))
+        for k in dict1:
+            del dict1[k][0]
+        print (dict1)
+    return render(request,'res_menu_display.html',{'results': dict1})
+
+
+
 
 
 def signout(request):
+    request.session.flush()
+    # request.session.set_expiry(0)
+    # request.session.clear_expired()
     return render(request,'signin_page.html')
     
 def signup(request):
@@ -378,6 +401,11 @@ def search(request):
         if request.POST.get('search_string'):
             searchvalues=search_res()
             searchvalues.r_name=request.POST.get('search_string')
+            #index = searchvalues.r_name.find(searchvalues.r_name)
+            # if index != -1:
+            #     print("Found the substring at index", index)
+            # else:
+            #     print("Did not find the substring.")
             searchvalues.Item=request.POST.get('search_string')
             request.session['search_string'] = searchvalues.r_name
             cursor=conn.cursor()
@@ -395,7 +423,40 @@ def search(request):
                 return render(request,'user_page.html',{'results': dict1})
     return redirect('user_page')
 
-
+def order_sum_to_res(request):
+    conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=LAPTOP-N1M6BCLV\MSSQLSERVER2019;DATABASE=tomazodb;UID=sa;PWD=toor')
+    cursor=conn.cursor()
+    r_emailid=""
+    r_emailid = request.session['r_emailid']
+    request.session['r_emailid'] = r_emailid
+    cursor.execute("select * from Cart c INNER JOIN res_data r ON c.r_name = r.r_name where r_emailid=?",(r_emailid))
+    order_sum_to_res = cursor.fetchall()
+    if order_sum_to_res is not None:
+        list1 = order_sum_to_res
+        list2 = order_sum_to_res
+        dict1 = {key: [(value1, value2, value3,value4,value5,value6,value7,value8,value9,value10)] for key, value1, value2, value3,value4,value5,value6,value7,value8,value9,value10 in list1}
+        for key, value1, value2, value3,value4,value5,value6,value7,value8,value9,value10 in list2:
+            dict1[key].append((value1, value2, value3,value4,value5,value6,value7,value8,value9,value10))
+        for k in dict1:
+            del dict1[k][0]
+        return render(request,'Order_summary.html',{'results':dict1})
+    return render(request,'Order_summary.html')
+        
+def out_for_delivery(request):
+    conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=LAPTOP-N1M6BCLV\MSSQLSERVER2019;DATABASE=tomazodb;UID=sa;PWD=toor')
+    cursor=conn.cursor()
+    emailid=""
+    emailid = request.POST.get('emailid')
+    res = ""
+    results = request.POST.get('name_of_item')
+    if not request.POST.get('name_of_item') == None:
+        res= results.split(",")
+    #print(res)
+    #print(emailid)
+    cursor.execute("Delete from Cart where emailid=? and Item=?",(emailid,res[0]))
+    cursor.commit()
+    return redirect('order_sum_to_res')
+    
 def thankyou(request):
     return render(request, 'thank_you.html')
 

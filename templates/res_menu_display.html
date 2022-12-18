@@ -43,7 +43,6 @@
         <div>
             <div>
                 <form action="{% url 'delete_res_menu_item' %}" method="POST">
-                    <label name="r_emailid" value="{{key}}"></label>
                     {%csrf_token %}
                     <select  name="name_of_item" class="summary-1" style="font-size: 25px">
                         <option disabled="true" selected>Select items from menu to delete/></option>
@@ -62,7 +61,7 @@
                     <br></br>
                     <br></br>
                     <br></br>
-                    <div >
+                    <div>
                         <button type="submit" style="float: right;">Delete from menu</button>
                     </div>
                 </form> 
@@ -75,6 +74,14 @@
 <div>
     <button class="login-button" onclick="location.href='{% url 'restaurant_menu' %}'" />Add menu</button>
 </div>
- 
+
+<div>
+    <button class="login-button" onclick="location.href='{% url 'order_sum_to_res' %}'" />Show order summary</button>
+</div>
+
+<div>
+    <button class="login-button" onclick="location.href='{% url 'signout' %}'" />Signout</button>
+</div> 
+
 </body>
 </html>                  

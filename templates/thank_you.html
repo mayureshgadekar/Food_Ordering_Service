@@ -5,9 +5,17 @@
 <body>
 <div class="login">
     <div class="login-header">
-        <h1>User</h1>
+        <h1>Thankyou</h1>
     </div> 
 </div>
-/form>    
+
+<div class="submit_button">
+    <button type="submit" onclick="location.href='{% url 'user_page' %}'">Back to ordering</button>
+</div>
+
+<div class="submit_button">
+    <button type="submit" onclick="location.href='{% url 'signout' %}'">Signout</button>
+</div>
+
 </body>
 </html>    

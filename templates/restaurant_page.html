@@ -8,30 +8,40 @@
         <div class="login-header">
             <h1>Restaurant Menu</h1>
         </div> 
-    <form method="POST" >
-        {% csrf_token %}
-        {% comment %} {% if messages %}
-        {% for message in messages %}
-        <div class={{ message.tags }}>{{ message }}</div>
-        {% endfor %} {% endcomment %}
-        <div class="login">
-            <div class="login-header" >Hello {{ request.session.r_emailid }}</div>
-        </div>
-        {% comment %} <p> Hello:</p>
-        <p>{{ request.session.r_emailid }}</p>
-    {% endcomment %}
 
-        <div class="login-form">
-            {% comment %} <h3>Restaurant Emailid:</h3>
-            <input type="text" placeholder="emailid" name="r_emailid"/> {% endcomment %}
-            <h3>Restaurant Item:</h3>
-            <input type="text" placeholder="Item" name="Item"/>
-            <h3>Restaurant Price:</h3>
-            <input type="text" placeholder="Price" name="Price"/>
-            <br>
-          <button  class="login-button" type="submit"/>Submit</button>
-        </div>
-    </form>
+            {% comment %} {% if messages %}
+            {% for message in messages %}
+            <div class={{ message.tags }}>{{ message }}</div>
+            {% endfor %} {% endcomment %}
+            <div class="login">
+                <div class="login-header" >Hello {{ request.session.r_emailid }}</div>
+            </div>
+            {% comment %} <p> Hello:</p>
+            <p>{{ request.session.r_emailid }}</p>
+        {% endcomment %}
+        <form action="{% url 'restaurant_menu' %}" method="POST">
+            {% csrf_token %}
+            <div class="login-form">
+                {% comment %} <h3>Restaurant Emailid:</h3>
+                <input type="text" placeholder="emailid" name="r_emailid"/> {% endcomment %}
+                <h3>Restaurant Item:</h3>
+                <input type="text" placeholder="Item" name="Item"/>
+                <h3>Restaurant Price:</h3>
+                <input type="text" placeholder="Price" name="Price"/>
+                <br>
+                <input type="hidden" name="r_emailid" value="{{ request.session.r_emailid }}"></input>
+                <button  class="login-button" type="submit"/>Submit</button>
+            </div>
+        </form>
 </div>
+
+<br>
+<button class="login-button" onclick="location.href='{% url 'res_menu_display' %}'" />Go back to menu</button>
+<br>
+
+<br>
+<button class="login-button" onclick="location.href='{% url 'signout' %}'" />Signout</button>
+<br>
+
 </body>
 </html>

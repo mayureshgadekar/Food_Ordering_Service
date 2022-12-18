@@ -18,7 +18,9 @@ urlpatterns = [
     path('res_signin/restaurant_menu/',views.restaurant_menu,name='restaurant_menu'),
     path('res_signin/res_menu_page/',views.res_menu_display,name='res_menu_display'),
     path('res_signin/res_menu_page/deleted_from_cart',views.delete_res_menu_item,name='delete_res_menu_item'),
+    path('res_signin/orders',views.order_sum_to_res,name='order_sum_to_res'),
+    path('res_signin/orders/out_for_delivery',views.out_for_delivery,name='out_for_delivery'),
     path('payment/',views.payment,name='payment'),
-    path('thank_you/',views.payment,name='payment'),
+    path('thank_you/',views.thankyou,name='thankyou'),
     path('',views.signout,name='signout')
 ]
